@@ -1,6 +1,6 @@
-# OmniForge-StartKit
+# OmniForge Development Start Kit
 
-A comprehensive Red Team starter kit with automated setup scripts, security tools, and documentation.
+A comprehensive (Red/Purple/Blue) Team starter kit with automated setup scripts, security tools, and documentation.
 
 ## Overview
 
