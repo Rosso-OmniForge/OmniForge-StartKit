@@ -18,6 +18,10 @@ OmniForge-StartKit/
 │   └── secure_connect.sh               # Secure SSH key authentication setup
 ├── Tools_Used/
 │   └── REDTEAM_QUICK_REFERENCE.md      # Extensive tools reference guide
+├── USB_Keyboard_Fix/
+│   ├── install.sh                      # ZXWMicroChip keyboard fix installer
+│   ├── test.sh                         # Keyboard functionality test script
+│   └── README.md                       # Detailed fix documentation
 └── VPN/
     └── wireguard_setup.sh              # WireGuard VPN setup script
 ```
@@ -115,7 +119,50 @@ sudo ./wireguard_setup.sh
    - Sets up firewall rules
    - Displays server public key for clients
 
-### 4. Red Team Quick Reference (`Tools_Used/REDTEAM_QUICK_REFERENCE.md`)
+### 4. USB Keyboard Fix (`USB_Keyboard_Fix/install.sh`)
+
+**Purpose**: Fix for ZXWMicroChip ZXW-KEYBOARD (USB ID 5566:0008) on Raspberry Pi Ubuntu.
+
+**Problem Solved**: Resolves USB enumeration failures that prevent the ZXWMicroChip keyboard from working on ARM64 Raspberry Pi systems, while it works perfectly on x86 Ubuntu systems.
+
+**Error Fixed**:
+```
+usb X-Y: unable to read config index 0 descriptor/start: -71
+usb X-Y: can't read configurations, error -71
+usb usb2-port1: unable to enumerate USB device
+```
+
+**Features**:
+- USB quirks for proper enumeration timing
+- Power management configuration
+- HID module setup for multi-interface support
+- Automatic backup and restoration capabilities
+- Comprehensive testing suite
+
+**Usage**:
+```bash
+cd USB_Keyboard_Fix
+./install.sh
+sudo reboot
+./test.sh    # After reboot to verify functionality
+```
+
+**What it does**:
+1. Adds USB quirks to kernel command line (`usbcore.quirks=5566:0008:b`)
+2. Configures udev rules for power management
+3. Sets up HID module loading
+4. Creates uninstall script for easy removal
+5. Tests keyboard functionality
+
+**Supported Hardware**:
+- Raspberry Pi 4 Model B
+- Raspberry Pi 5 Model B
+- Raspberry Pi 400
+- Other Pi models (untested but should work)
+
+**Supported OS**: Ubuntu 22.04+ ARM64 on Raspberry Pi
+
+### 5. Red Team Quick Reference (`Tools_Used/REDTEAM_QUICK_REFERENCE.md`)
 
 **Purpose**: Comprehensive reference guide for Red Team tools and techniques.
 
@@ -217,6 +264,16 @@ The base installation script includes optimizations for Raspberry Pi 5:
 
 **Important**: After running on Pi 5, a reboot is required for NVMe fixes to take effect.
 
+### USB Keyboard Issues on Raspberry Pi
+If you have a ZXWMicroChip ZXW-KEYBOARD that works on PC but not on Raspberry Pi:
+```bash
+cd USB_Keyboard_Fix
+./install.sh
+sudo reboot
+```
+
+The keyboard should work normally after reboot. Run `./test.sh` to verify functionality.
+
 ## Troubleshooting
 
 ### Common Issues
@@ -242,6 +299,13 @@ The base installation script includes optimizations for Raspberry Pi 5:
 - Verify key permissions: `ls -la ~/.ssh/`
 - Check server SSH config: `ssh -v user@server`
 - Ensure authorized_keys is updated on server
+
+**ZXWMicroChip keyboard not working on Pi**:
+- Run the USB keyboard fix: `cd USB_Keyboard_Fix && ./install.sh`
+- Ensure adequate power supply (use official Pi adapter)
+- Try different USB ports
+- Check for errors: `sudo dmesg | grep "unable to read config"`
+- Run test script after reboot: `./test.sh`
 
 ### Logs and Debugging
 - Installation logs: `/tmp/baseinstall.log`
