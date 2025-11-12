@@ -2,8 +2,8 @@
 
 ################################################################################
 # Base Installation Script for Debian-based Systems
-# Author: Nero Rosso -  OmniForge
-# Date: November 6, 2025
+# Author: Nero Rosso - OmniForge
+# Date: November 12, 2025
 # Version: 2.0 - Security Enhanced
 # 
 # Purpose: Automated setup script for fresh Debian/Ubuntu/Raspberry Pi OS installs
@@ -238,12 +238,12 @@ detect_os() {
         exit 1
     fi
     
-    # Detect if running on Raspberry Pi 5
+    # Detect if running on Raspberry Pi 3
     if [ -f /proc/device-tree/model ]; then
         MODEL=$(tr -d '\0' </proc/device-tree/model)
-        if [[ $MODEL == *"Raspberry Pi 5"* ]]; then
-            IS_PI5=true
-            log_info "Running on Raspberry Pi 5 - will apply specific optimizations"
+        if [[ $MODEL == *"Raspberry Pi 3"* ]]; then
+            IS_PI3=true
+            log_info "Running on Raspberry Pi 3 - will apply specific optimizations"
             
             # Detect storage type
             if lsblk | grep -q nvme; then
@@ -257,10 +257,10 @@ detect_os() {
                 log_warning "Unknown storage type"
             fi
         else
-            IS_PI5=false
+            IS_PI3=false
         fi
     else
-        IS_PI5=false
+        IS_PI3=false
     fi
 }
 
@@ -269,7 +269,7 @@ detect_os() {
 ################################################################################
 
 apply_pi5_fixes() {
-    if [ "$IS_PI5" != true ]; then
+    if [ "$IS_PI3" != true ]; then
         return
     fi
     
@@ -344,7 +344,7 @@ EOF
 ################################################################################
 
 optimize_pi5_nvme() {
-    if [ "$IS_PI5" != true ] || [ "$STORAGE_TYPE" != "nvme" ]; then
+    if [ "$IS_PI3" != true ] || [ "$STORAGE_TYPE" != "nvme" ]; then
         return
     fi
     
@@ -1137,7 +1137,7 @@ install_system_monitoring() {
     check_package_availability "lm-sensors" && apt-get install -y lm-sensors || log_info "lm-sensors not available"
     
     # Pi5 specific monitoring
-    if [ "$IS_PI5" = true ]; then
+    if [ "$IS_PI3" = true ]; then
         log_info "Installing Raspberry Pi specific tools..."
         if check_package_availability "raspberrypi-kernel-headers"; then
             apt-get install -y raspberrypi-kernel-headers
@@ -1640,7 +1640,7 @@ post_install_summary() {
     fi
     echo ""
     
-    if [ "$IS_PI5" = true ]; then
+    if [ "$IS_PI3" = true ]; then
         log_warning "Raspberry Pi 5 Optimizations Applied"
         echo "  ⚠️  Storage Type: $STORAGE_TYPE"
         if [ "$STORAGE_TYPE" = "nvme" ]; then
@@ -1651,7 +1651,7 @@ post_install_summary() {
     fi
     
     log_info "Raspberry Pi Monitoring Commands:"
-    if [ "$IS_PI5" = true ] && command -v vcgencmd &> /dev/null; then
+    if [ "$IS_PI3" = true ] && command -v vcgencmd &> /dev/null; then
         echo "  🌡️  Temperature:   pitemp (or vcgencmd measure_temp)"
         echo "  ⚡ Voltages:      pivolts"
         echo "  ⏰ CPU Clock:     piclock"
@@ -1668,7 +1668,7 @@ post_install_summary() {
     echo "     gh auth login"
     echo ""
     
-    if [ "$IS_PI5" = true ]; then
+    if [ "$IS_PI3" = true ]; then
         echo "  2. REBOOT NOW to activate all Pi5 optimizations:"
         echo "     sudo reboot"
         echo ""
@@ -1736,7 +1736,7 @@ post_install_summary() {
     echo "================================================================================"
     echo ""
     
-    if [ "$IS_PI5" = true ]; then
+    if [ "$IS_PI3" = true ]; then
         log_warning "⚠️  REBOOT REQUIRED - Run: sudo reboot"
     fi
 }

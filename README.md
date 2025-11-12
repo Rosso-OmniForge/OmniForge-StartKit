@@ -12,8 +12,16 @@ This repository contains a collection of scripts and tools designed to help Red 
 OmniForge-StartKit/
 ├── New_Installs/
 │   └── Raspberry_Pi/
-│       └── Pi_5/
+│       ├── Pi_5/
 │           └── baseinstall.sh          # Comprehensive system setup script
+│       ├── Pi_4/
+│           └── baseinstall.sh          # Comprehensive system setup script
+│       └── Pi_3/
+│           └── baseinstall.sh          # Comprehensive system setup script
+├── Other_Installs/
+│   └── Staff_Personal/
+│       └── Linux_Gaming/
+│           └── gaming.sh               # Basic install for all Gaming Requirements on Debian 13
 ├── SSH/
 │   └── secure_connect.sh               # Secure SSH key authentication setup
 ├── Tools_Used/
