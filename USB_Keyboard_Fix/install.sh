@@ -10,7 +10,7 @@
 # The keyboard works fine on standard x86 Ubuntu but fails on ARM64 Pi Ubuntu
 # due to USB controller timing and power management differences.
 #
-# Author: GitHub Copilot & Nero
+# Author: Nero Rosso - OmniForge 
 # Date: November 7, 2025
 # ==============================================================================
 
